@@ -58,6 +58,10 @@ resource "kubernetes_deployment" "jenkins_operator" {
       }
     }
   }
+  depends_on = [
+    null_resource.jenkins_crd,
+    null_resource.jenkins_image_crd
+  ]
 }
 
 resource "kubernetes_service_account" "jenkins_operator" {
