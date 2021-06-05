@@ -1,12 +1,3 @@
-
-#   seedJobs:
-#   - id: jenkins
-#     credentialType: usernamePassword
-#     credentialID: jenkins-github-pass
-#     targets: {{ .Values.targets }}
-#     description: "Jenkins Repo"
-#     repositoryBranch: {{ .Values.branch }}
-#     repositoryUrl: https://github.com/lovevery-digital/jenkins-pipeline-library.git
 data "kubernetes_service" "jenkins_http" {
   metadata {
     name = "jenkins-operator-http-jenkins"
@@ -15,6 +6,12 @@ data "kubernetes_service" "jenkins_http" {
   depends_on = [
     kubernetes_manifest.jenkins
   ]
+}
+
+resource "random_integer" "jenkins_node_port" {
+  min = 30000
+  max = 32767
+  seed = terraform.workspace
 }
 
 resource "kubernetes_manifest" "jenkins" {
@@ -30,6 +27,7 @@ resource "kubernetes_manifest" "jenkins" {
         "service" = {
             "type" = "NodePort"
             "port" = 8080
+            "nodePort" = random_integer.jenkins_node_port.result
         }
         "configurationAsCode" = {
           "configurations" = [
@@ -127,6 +125,10 @@ resource "kubernetes_manifest" "jenkins" {
                     "name" = "pipeline-githubnotify-step"
                     "version" = "1.0.5"
                 },
+                {
+                    "name" = "matrix-auth"
+                    "version" = "2.6.7"
+                },
             ]
         }
     }
@@ -134,7 +136,7 @@ resource "kubernetes_manifest" "jenkins" {
   wait_for = {
     fields = {
       # Check the phase of a pod
-      "status.userConfigurationCompletedTime" = "\\d{4}.*"
+      "status.baseConfigurationCompletedTime" = "\\d{4}.*"
     }
   }
 
