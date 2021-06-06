@@ -6,6 +6,13 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
   data = {
     "1-system-message.yaml"=<<EOF
   jenkins:
+    globalNodeProperties:
+      - envVars:
+          env:
+          - key: GITHUB_ORG
+            value: ${var.github_org}
+          - key: PIPELINE_LIBRARY_REPO_NAME
+            value: ${var.pipeline_library_repo_name}
     authorizationStrategy:
       projectMatrix:
         permissions:
@@ -18,40 +25,28 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
   unclassified:
     location:
       url: localhost:${random_integer.jenkins_node_port.result}
-# credentials:
-#   system:
-#     domainCredentials:
-#     - credentials:
-#       - usernamePassword:
-#           description: "Github creds"
-#           id: "github_credentials"
-#           password: {{ .Values.githubPassword }}
-#           scope: GLOBAL
-#           username: {{ .Values.githubUser }}
-    #   - string:
-    #       scope: GLOBAL
-    #       id: slack-token
-    #       secret: {{ .Values.slackToken }}
-    #       description: Slack token
-# unclassified:
-#   slackNotifier:
-#     teamDomain: ""
-#     tokenCredentialId: slack-token
-#     botUser: true
-#     room: automated-deployments
+  credentials:
+    system:
+      domainCredentials:
+      - credentials:
+        - usernamePassword:
+            description: "Github creds"
+            id: "github-credentials"
+            password: ${var.github_token}
+            scope: GLOBAL
+            username: ACCESSTOKEN
 
-#   globalLibraries:
-#     libraries:
-#     - defaultVersion: master
-#       name: "lovevery-jenkins-pipeline-library"
-#       defaultVersion: {{ .Values.branch }}
-#       retriever:
-#         modernSCM:
-#           scm:
-#             git:
-#               id: "lovevery-jenkins-pipeline-library"
-#               remote: "https://github.com/lovevery-digital/jenkins-pipeline-library.git"
-#               credentialsId: "github_credentials"
+  globalLibraries:
+    libraries:
+    - defaultVersion: main
+      name: "jenkins-pipeline-library"
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              id: "jenkins-pipeline-library"
+              remote: "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"
+              credentialsId: "github-credentials"
 EOF
   }
 }

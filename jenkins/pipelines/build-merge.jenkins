@@ -1,0 +1,38 @@
+def lib = library("jenkins-pipeline-library@${env.GIT_BRANCH}").lib
+
+pipeline {
+  options { 
+    disableConcurrentBuilds() 
+  }
+  agent {
+    kubernetes {
+      yaml ""
+    }
+  }
+  stages {
+    stage("Parallel") {
+        parallel {
+            stage("Setup") {
+                steps {
+                    script {
+                        lib.Github.addJenkinsJobTrigger(this, "merge")
+                    }
+                }
+            }
+
+            stage("Build") {
+                steps {
+                    script {
+                        // This should be populated but the actual stuff that build the job...
+                        sh "echo hello"
+                    }
+                }
+            }
+        }
+    }
+
+    stage("Merge if merge job") {
+        lib.Github.merge(this)
+    }
+  }
+}

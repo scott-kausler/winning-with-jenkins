@@ -118,10 +118,6 @@ resource "kubernetes_manifest" "jenkins" {
                     "version" = "2.45"
                 },
                 {
-                    "name" = "http_request"
-                    "version" = "1.8.27"
-                },
-                {
                     "name" = "pipeline-githubnotify-step"
                     "version" = "1.0.5"
                 },
@@ -131,6 +127,20 @@ resource "kubernetes_manifest" "jenkins" {
                 },
             ]
         }
+        "seedJobs" = [
+          {
+            "id" = "jenkins"
+            "credentialType" = "usernamePassword"
+            "credentialID" = "github-credentials"
+            "targets" = <<EOF
+jenkins/jobs/*.jenkins
+jenkins/jobs/${terraform.workspace}/*.jenkins
+EOF
+            "description" = "Seed Jobs"
+            "repositoryBranch" = "main"
+            "repositoryUrl" = "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"
+          }
+        ]
     }
   }
   wait_for = {

@@ -1,0 +1,9 @@
+#!/usr/bin/env groovy
+import utilities.JobDSLUtilities
+
+def githubOrg=System.getenv('GITHUB_ORG')
+def pipelineLibraryRepoName=System.getenv('PIPELINE_LIBRARY_REPO_NAME')
+
+JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
+JobDSLUtilities.createMultibranchPipelineJob(this, githubOrg, githubRepo)
+JobDSLUtilities.createPipelineJob(this, githubOrg, githubRepo)

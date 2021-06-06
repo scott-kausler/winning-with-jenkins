@@ -1,0 +1,16 @@
+#!/usr/bin/env groovy
+import utilities.JobDSLUtilities
+
+def githubOrg=System.getenv('GITHUB_ORG')
+def pipelineLibraryRepoName=System.getenv('PIPELINE_LIBRARY_REPO_NAME')
+def testJobName="jenkins-test"
+def testsToQueue=5
+
+JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
+JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/test-job.jenkins")
+
+// Queue the test job
+for(int i = 0; i<testsToQueue; i++) {
+    queue("${pipelineLibraryRepoName}/${testJobName}")
+}
+

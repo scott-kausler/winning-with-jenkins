@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "jenkins_operator" {
       spec {
         service_account_name = local.jenkins_operator
         container {
-          image = "virtuslab/jenkins-operator:${var.operator_version}"
+          image = "virtuslab/jenkins-operator:${local.operator_version}"
           name  = local.jenkins_operator
           command = [ "jenkins-operator" ]
           image_pull_policy = "IfNotPresent"
