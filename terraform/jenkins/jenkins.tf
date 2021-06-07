@@ -14,6 +14,17 @@ resource "random_integer" "jenkins_node_port" {
   seed = terraform.workspace
 }
 
+resource "kubernetes_secret" "github_credentials" {
+  metadata {
+    name = "github-credentials"
+    namespace = kubernetes_namespace.jenkins.id
+  }
+  data = {
+    username = "ACCESSTOKEN"
+    password = var.github_token
+  }
+}
+
 resource "kubernetes_manifest" "jenkins" {
   provider = kubernetes-alpha
   manifest = {
@@ -129,13 +140,21 @@ resource "kubernetes_manifest" "jenkins" {
         }
         "seedJobs" = [
           {
-            "id" = "jenkins"
+            "id" = "jenkins-default"
             "credentialType" = "usernamePassword"
             "credentialID" = "github-credentials"
-            "targets" = <<EOF
-jenkins/jobs/*.jenkins
-jenkins/jobs/${terraform.workspace}/*.jenkins
-EOF
+            "ignoreMissingFiles" = false
+            "targets" = "jenkins/jobs/*.jenkins"
+            "description" = "Seed Jobs"
+            "repositoryBranch" = "main"
+            "repositoryUrl" = "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"
+          },
+          {
+            "id" = "jenkins-workspace"
+            "credentialType" = "usernamePassword"
+            "credentialID" = "github-credentials"
+            "ignoreMissingFiles" = true
+            "targets" = "jenkins/jobs/${terraform.workspace}/*.jenkins"
             "description" = "Seed Jobs"
             "repositoryBranch" = "main"
             "repositoryUrl" = "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"

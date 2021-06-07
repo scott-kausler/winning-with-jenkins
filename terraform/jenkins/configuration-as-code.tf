@@ -24,31 +24,30 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
       local:
         allowsSignup: false
         enableCaptcha: false
-  unclassified:
-    location:
-      url: localhost:${random_integer.jenkins_node_port.result}
   credentials:
     system:
       domainCredentials:
       - credentials:
         - usernamePassword:
-            description: "Github creds"
+            description: "Github"
             id: "github-credentials"
-            password: ${var.github_token}
+            password: $${GITHUB_TOKEN}
             scope: GLOBAL
             username: ACCESSTOKEN
-
-  globalLibraries:
-    libraries:
-    - defaultVersion: main
-      name: "jenkins-pipeline-library"
-      retriever:
-        modernSCM:
-          scm:
-            git:
-              id: "jenkins-pipeline-library"
-              remote: "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"
-              credentialsId: "github-credentials"
+  unclassified:
+    location:
+      url: localhost:${random_integer.jenkins_node_port.result}
+    globalLibraries:
+      libraries:
+      - defaultVersion: main
+        name: "jenkins-pipeline-library"
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                id: "jenkins-pipeline-library"
+                remote: "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"
+                credentialsId: "github-credentials"
 EOF
   }
 }
@@ -59,5 +58,6 @@ resource "kubernetes_secret" "jenkins_conf_secrets" {
     namespace = kubernetes_namespace.jenkins.id
   }
   data = {
+    GITHUB_TOKEN = var.github_token
   }
 }
