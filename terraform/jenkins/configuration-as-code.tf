@@ -13,6 +13,8 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
             value: ${var.github_org}
           - key: PIPELINE_LIBRARY_REPO_NAME
             value: ${var.pipeline_library_repo_name}
+          - key: WORKSPACE
+            value: ${terraform.workspace}
     authorizationStrategy:
       projectMatrix:
         permissions:
