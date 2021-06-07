@@ -9,7 +9,7 @@ JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)
 JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/test-job.jenkins")
 
 def workspace=System.getenv('WORKSPACE')
-if("prod".equals(worspace)) {
+if("prod".equals(workspace)) {
     // Queue the test job
     for(int i = 0; i<testsToQueue; i++) {
         queue("${pipelineLibraryRepoName}/${testJobName}")

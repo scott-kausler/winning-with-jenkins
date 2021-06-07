@@ -22,13 +22,18 @@ class Github implements Serializable {
         return currentBranch
     }
 
+    public static String getRepoName(script) {
+        def tokens = script.env.GIT_URL.split("/")
+        return tokens[4].substring(0, tokens[4].length() - 4)
+    }
+
+    public static String getOrgName(script) {
+        def tokens = script.env.GIT_URL.split("/")
+        return tokens[3]
+    }
+
     public static String getOrgAndRepoName(script) {
-      return script.sh(script: """
-        ORIGINAL_GIT_URL=$script.GIT_URL
-        GIT_URL_WITHOUT_SUFFIX=\${ORIGINAL_GIT_URL%.*}
-        GITHUB_ORG_REPO=\${GIT_URL_WITHOUT_SUFFIX#*https://github.com/}
-        printf "\$GITHUB_ORG_REPO"
-      """, returnStdout: true)
+        return getOrgName(script) + "/" + getRepoName(script)
     }
 
     public static String getPRNumber(script) {
