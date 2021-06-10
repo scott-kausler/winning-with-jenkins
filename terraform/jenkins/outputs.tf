@@ -1,3 +1,3 @@
 output "jenkins_url" {
-    value = "localhost:${random_integer.jenkins_node_port.result}"
+    value = "127.0.0.1:${random_integer.jenkins_node_port.result}"
 }

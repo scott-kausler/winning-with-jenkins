@@ -1,4 +1,4 @@
-def lib = library("jenkins-pipeline-library@${env.GIT_BRANCH}").lib
+def lib = library("jenkins-pipeline-library@${env.BRANCH_NAME}").lib
 
 pipeline {
   options { 
