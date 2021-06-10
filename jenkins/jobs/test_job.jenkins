@@ -1,14 +1,14 @@
 import utilities.JobDSLUtilities
 
-def githubOrg=env.GITHUB_ORG
-def pipelineLibraryRepoName=env.PIPELINE_LIBRARY_REPO_NAME
+def githubOrg=getBinding().getVariables()['GITHUB_ORG']
+def pipelineLibraryRepoName=getBinding().getVariables()['PIPELINE_LIBRARY_REPO_NAME']
 def testJobName="jenkins-test"
 def testsToQueue=5
 
 JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
 JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/test-job.jenkins")
 
-def workspace=env.WORKSPACE
+def workspace=getBinding().getVariables()['WORKSPACE']
 if("prod".equals(workspace)) {
     // Queue the test job
     for(int i = 0; i<testsToQueue; i++) {

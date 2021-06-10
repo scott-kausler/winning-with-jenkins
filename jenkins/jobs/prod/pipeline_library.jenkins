@@ -1,7 +1,7 @@
 import utilities.JobDSLUtilities
 
-def githubOrg=env.GITHUB_ORG
-def pipelineLibraryRepoName=env.PIPELINE_LIBRARY_REPO_NAME
+def githubOrg=getBinding().getVariables()['GITHUB_ORG']
+def pipelineLibraryRepoName=getBinding().getVariables()['PIPELINE_LIBRARY_REPO_NAME']
 
 JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
 JobDSLUtilities.createMultibranchPipelineJob(this, githubOrg, githubRepo)
