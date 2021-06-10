@@ -6,7 +6,7 @@ def testJobName="jenkins-test"
 def testsToQueue=5
 
 JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
-JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/test-job.jenkins")
+JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/${testJobName}.jenkins")
 
 def workspace=getBinding().getVariables()['WORKSPACE']
 if("prod".equals(workspace)) {
