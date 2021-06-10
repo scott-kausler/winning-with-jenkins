@@ -63,7 +63,7 @@ class JobDSLUtilities {
         script.pipelineJob("${githubRepo}/" + jobName) {
             displayName(jobName)
             parameters {
-                stringParam( 'GIT_BRANCH', 'main', 'The branch name you are deploying from')
+                stringParam( 'BRANCH_NAME', 'main', 'The branch name you are deploying from')
             }
             logRotator {
                 numToKeep(10)
@@ -77,7 +77,7 @@ class JobDSLUtilities {
                                 url("https://github.com/${githubOrg}/${githubRepo}.git")
                                 credentials("github-credentials")
                             }
-                            branches('${GIT_BRANCH}')
+                            branches('${BRANCH_NAME}')
                         }
                     }
                     scriptPath(jenkinsfile)

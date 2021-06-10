@@ -136,6 +136,10 @@ resource "kubernetes_manifest" "jenkins" {
                     "name" = "matrix-auth"
                     "version" = "2.6.7"
                 },
+                {
+                    "name" = "pipeline-utility-steps"
+                    "version" = "2.8.0"
+                },
             ]
         }
         "seedJobs" = [

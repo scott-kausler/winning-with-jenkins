@@ -1,4 +1,4 @@
-def lib = library("jenkins-pipeline-library@${env.GIT_BRANCH}").lib
+def lib = library("jenkins-pipeline-library@${env.BRANCH_NAME}").lib
 
 pipeline {
   options { 
@@ -32,7 +32,11 @@ pipeline {
     }
 
     stage("Merge if merge job") {
-        lib.Github.merge(this)
+      steps {
+        script{
+          lib.Github.merge(this)
+        }
+      }
     }
   }
 }

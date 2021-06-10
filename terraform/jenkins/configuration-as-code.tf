@@ -36,7 +36,7 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
             username: ACCESSTOKEN
   unclassified:
     location:
-      url: localhost:${random_integer.jenkins_node_port.result}
+      url: 127.0.0.1:${random_integer.jenkins_node_port.result}
     globalLibraries:
       libraries:
       - defaultVersion: main
