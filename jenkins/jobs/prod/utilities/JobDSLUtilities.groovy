@@ -36,13 +36,6 @@ class JobDSLUtilities {
                         }
                         }
                     }
-                    buildStrategies {
-                        buildAllBranches {
-                            strategies {
-                                skipInitialBuildOnFirstBranchIndexing()
-                            }
-                        }
-                    }
                 }
             }
 
