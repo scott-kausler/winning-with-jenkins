@@ -140,6 +140,10 @@ resource "kubernetes_manifest" "jenkins" {
                     "name" = "pipeline-utility-steps"
                     "version" = "2.8.0"
                 },
+                {
+                    "name" = "http_request"
+                    "version" = "1.9.0"
+                },
             ]
         }
         "seedJobs" = [
