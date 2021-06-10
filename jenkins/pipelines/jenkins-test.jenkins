@@ -1,15 +1,9 @@
 pipeline {
-  agent {
-    kubernetes {
-      yaml ""
-    }
-  }
+  agent none
   stages {
     stage("Echo hello") {
         steps {
-            script {
-                sh "echo hello"
-            }
+            echo "hello"
         }
     }
   }
