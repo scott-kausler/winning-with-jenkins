@@ -2,7 +2,7 @@ import utilities.JobDSLUtilities
 
 def githubOrg=getBinding().getVariables()['GITHUB_ORG']
 def pipelineLibraryRepoName=getBinding().getVariables()['PIPELINE_LIBRARY_REPO_NAME']
-def testJobName="jenkins-test"
+def testJobName="jenkins-test-job"
 def testsToQueue=5
 
 JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
