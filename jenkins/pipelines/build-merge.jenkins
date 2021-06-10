@@ -32,7 +32,11 @@ pipeline {
     }
 
     stage("Merge if merge job") {
-        lib.Github.merge(this)
+      steps {
+        script{
+          lib.Github.merge(this)
+        }
+      }
     }
   }
 }
