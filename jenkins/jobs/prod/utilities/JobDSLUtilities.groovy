@@ -30,7 +30,7 @@ class JobDSLUtilities {
                                 strategyId(2)
                             }
                             headWildcardFilter {
-                                includes(branches)
+                                includes("*")
                                 excludes("")
                             }
                         }
