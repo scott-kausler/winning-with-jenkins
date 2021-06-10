@@ -70,7 +70,7 @@ class JobDSLUtilities {
         script.pipelineJob("${githubRepo}/" + jobName) {
             displayName(jobName)
             parameters {
-                stringParam( 'GIT_BRANCH', 'master', 'The branch name you are deploying from')
+                stringParam( 'GIT_BRANCH', 'main', 'The branch name you are deploying from')
             }
             logRotator {
                 numToKeep(10)
