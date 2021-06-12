@@ -45,22 +45,18 @@ class Github implements Serializable {
         def githubOrgAndRepo=getOrgAndRepoName(script)
         def branch = getBranchName(script)
 
-        prNumber=script.sh(script: """
-            URL="https://api.github.com/repos/$githubOrgAndRepo/pulls?head=lovevery-digital:${branch}&state=open"
-            #remove whitespace
-            URL=\$(echo \$URL)
-            curl -s -f -H "Authorization: token $script.GITHUB_PASS" "\$URL" > pr.json
-            PR_COUNT=\$(jq -r length pr.json)
-            if [ "\$PR_COUNT" != "1" ]; then
-                echo "-1"
-            else
-                PR_NUMBER=\$(jq -rj '.[0].number' pr.json)
-                echo "\$PR_NUMBER"
-            fi
-        """, returnStdout: true).replaceAll("\\s", "")
-        }
+        def response = script.httpRequest(
+            url: "https://api.github.com/repos/$githubOrgAndRepo/pulls?head=lovevery-digital:${branch}&state=open",
+            acceptType: "APPLICATION_JSON",
+            customHeaders: [[name: "Authorization", value: "token $script.GITHUB_PASS"]],
+            validResponseCodes: "200,201"
+        )
 
-        return prNumber;
+        def props = readJSON script.response.content
+        if(props.length == 0) {
+            return "-1"
+        }
+        return props[0]["number"]
     }
 
     public static void addStatusCheck(script, contextSuffix, description, url) {
@@ -101,11 +97,14 @@ class Github implements Serializable {
 
         def githubOrgAndRepo=getOrgAndRepoName(script)
         script.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASS']]) {
-            script.sh(script: """
-                URL="https://api.github.com/repos/${githubOrgAndRepo}/pulls/${prNumber}/merge"
-                URL=\$(echo \$URL)
-                curl -f -H "Authorization: token ${script.GITHUB_PASS}"  -X PUT -d '{"merge_method": "squash"}'  "\$URL"
-            """)
+            script.httpRequest(
+                url: "https://api.github.com/repos/$githubOrgAndRepo/pulls/${prNumber}/merge",
+                customHeaders: [[name: "Authorization", value: "token $script.GITHUB_PASS"]],
+                contentType: "APPLICATION_JSON",
+                requestBody: '{"merge_method": "squash"}'
+                httpMode: "PUT",
+                validResponseCodes: "200,201"
+            )
         }
     }
 }
