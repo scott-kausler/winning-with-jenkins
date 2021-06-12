@@ -52,7 +52,7 @@ class Github implements Serializable {
                 validResponseCodes: "200,201"
             )
 
-            def props = readJSON text: response.content
+            def props = script.readJSON text: response.content
             if(props.length == 0) {
                 return "-1"
             }
