@@ -52,11 +52,12 @@ class Github implements Serializable {
                 validResponseCodes: "200,201"
             )
 
+            script.echo response.content
             def props = script.readJSON text: response.content
             if(props.length == 0) {
                 return "-1"
             }
-            script.echo props[0]
+            script.echo props.length
             return props[0].number
         }
     }
