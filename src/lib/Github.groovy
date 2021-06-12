@@ -52,11 +52,8 @@ class Github implements Serializable {
                 validResponseCodes: "200,201"
             )
 
-            script.echo "Status: "+response.status
-            script.echo "Content: "+response.content
-
             def props = script.readJSON text: response.content
-            if(response.content.size() > 5) {
+            if(response.content.size() < 5) {
                 return "-1"
             }
             return props[0].number
@@ -81,24 +78,19 @@ class Github implements Serializable {
         def encodedBranchName=java.net.URLEncoder.encode("$branch", "UTF-8")
         def repoName=getRepoName(script)
 
-        String url = "${script.JENKINS_URL}job/$repoName/job/$jobName/parambuild?GIT_BRANCH=$encodedBranchName"
+        String url = "${script.JENKINS_URL}job/$repoName/job/$jobName/parambuild?BRANCH_NAME=$encodedBranchName"
         String statusText = "Click Details button to go to $jobName job"
 
         addStatusCheck(script, "$jobName-job", statusText, url)
     }
 
     public static merge(script) {
-        def prNumber = getPRNumber(script)
-        if(prNumber == "-1") {
-            script.echo "No PR number. Cannot merge"
-            return
-        }
-
         if(!script.env.JOB_NAME.contains("/merge")) {
             script.echo "Can only merge merge jobs"
             return
         }
 
+        def prNumber = getPRNumber(script)
         def githubOrgAndRepo=getOrgAndRepoName(script)
 
         script.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASS']]) {
