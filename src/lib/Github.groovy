@@ -42,21 +42,22 @@ class Github implements Serializable {
         }
 
         script.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASS']]) {
-        def githubOrgAndRepo=getOrgAndRepoName(script)
-        def branch = getBranchName(script)
+            def githubOrgAndRepo=getOrgAndRepoName(script)
+            def branch = getBranchName(script)
 
-        def response = script.httpRequest(
-            url: "https://api.github.com/repos/$githubOrgAndRepo/pulls?head=lovevery-digital:${branch}&state=open",
-            acceptType: "APPLICATION_JSON",
-            customHeaders: [[name: "Authorization", value: "token $script.GITHUB_PASS"]],
-            validResponseCodes: "200,201"
-        )
+            def response = script.httpRequest(
+                url: "https://api.github.com/repos/$githubOrgAndRepo/pulls?head=lovevery-digital:${branch}&state=open",
+                acceptType: "APPLICATION_JSON",
+                customHeaders: [[name: "Authorization", value: "token $script.GITHUB_PASS"]],
+                validResponseCodes: "200,201"
+            )
 
-        def props = readJSON script.response.content
-        if(props.length == 0) {
-            return "-1"
+            def props = readJSON response.content
+            if(props.length == 0) {
+                return "-1"
+            }
+            return props[0]["number"]
         }
-        return props[0]["number"]
     }
 
     public static void addStatusCheck(script, contextSuffix, description, url) {
