@@ -46,7 +46,7 @@ class Github implements Serializable {
             def branch = getBranchName(script)
 
             def response = script.httpRequest(
-                url: "https://api.github.com/repos/$githubOrgAndRepo/pulls?head=lovevery-digital:${branch}&state=open",
+                url: "https://api.github.com/repos/$githubOrgAndRepo/pulls?head=${branch}&state=open",
                 acceptType: "APPLICATION_JSON",
                 customHeaders: [[name: "Authorization", value: "token $script.GITHUB_PASS"]],
                 validResponseCodes: "200,201"
