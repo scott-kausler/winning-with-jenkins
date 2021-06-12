@@ -56,7 +56,7 @@ class Github implements Serializable {
             if(props.length == 0) {
                 return "-1"
             }
-            return props[0]["number"]
+            return props[0].number
         }
     }
 
