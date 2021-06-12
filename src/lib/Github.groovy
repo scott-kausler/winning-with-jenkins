@@ -85,17 +85,18 @@ class Github implements Serializable {
 
     public static merge(script) {
         def prNumber = getPRNumber(script)
-        if(prNumber == "-1"){
+        if(prNumber == "-1") {
             script.echo "No PR number. Cannot merge"
             return
         }
 
-        if(!script.env.JOB_NAME.contains("/merge")){
+        if(!script.env.JOB_NAME.contains("/merge")) {
             script.echo "Can only merge merge jobs"
             return
         }
 
         def githubOrgAndRepo=getOrgAndRepoName(script)
+
         script.withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASS']]) {
             script.httpRequest(
                 url: "https://api.github.com/repos/$githubOrgAndRepo/pulls/${prNumber}/merge",
