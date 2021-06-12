@@ -56,10 +56,9 @@ class Github implements Serializable {
             script.echo "Content: "+response.content
 
             def props = script.readJSON text: response.content
-            if(props.length == 0) {
+            if(response.content.size() > 5) {
                 return "-1"
             }
-            script.echo props.length
             return props[0].number
         }
     }
