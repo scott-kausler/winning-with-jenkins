@@ -101,7 +101,7 @@ class Github implements Serializable {
                 url: "https://api.github.com/repos/$githubOrgAndRepo/pulls/${prNumber}/merge",
                 customHeaders: [[name: "Authorization", value: "token $script.GITHUB_PASS"]],
                 contentType: "APPLICATION_JSON",
-                requestBody: '{"merge_method": "squash"}'
+                requestBody: '{"merge_method": "squash"}',
                 httpMode: "PUT",
                 validResponseCodes: "200,201"
             )
