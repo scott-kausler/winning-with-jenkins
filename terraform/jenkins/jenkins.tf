@@ -107,6 +107,10 @@ resource "kubernetes_manifest" "jenkins" {
                     "version" = "1.51"
                 },
                 {
+                    "name" = "kubernetes-client-api"
+                    "version" = "4.13.3-1"
+                },
+                {
                     "name" = "kubernetes-credentials-provider"
                     "version" = "0.18-1"
                 }
