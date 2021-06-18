@@ -1,3 +1,24 @@
+locals {
+  local_security_realm=<<EOF
+    securityRealm:
+      local:
+        allowsSignup: false
+        enableCaptcha: false
+EOF
+
+  github_security_realm=<<EOF
+    securityRealm:
+      github:
+        githubWebUri: "https://github.com"
+        githubApiUri: "https://api.github.com"
+        clientID: ${var.github_oauth_client_id}
+        clientSecret: ${var.github_oauth_client_secret}
+        oauthScopes: read:org,user:email
+EOF
+
+  security_realm = var.github_oauth_client_id == null || var.github_oauth_client_id == "" ? local.local_security_realm : local.github_security_realm
+}
+
 resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
   metadata {
     name = "jenkins-operator-user-configuration"
@@ -15,15 +36,13 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
             value: ${var.pipeline_library_repo_name}
           - key: WORKSPACE
             value: ${terraform.workspace}
+          - key: JENKINS_BASE_HOST
+            value: 127.0.0.1:${random_integer.jenkins_node_port.result}
     authorizationStrategy:
       projectMatrix:
         permissions:
-        - "Overall/Administer:jenkins-operator"
-        - "Overall/Administer:anonymous"
-    securityRealm:
-      local:
-        allowsSignup: false
-        enableCaptcha: false
+        - "Overall/Administer:${var.administrator_user}"
+${local.security_realm}
   credentials:
     system:
       domainCredentials:

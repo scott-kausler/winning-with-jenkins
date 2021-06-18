@@ -8,12 +8,4 @@ def testsToQueue=5
 JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)    
 JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/${testJobName}.jenkins")
 
-def workspace=getBinding().getVariables()['WORKSPACE']
-if("prod".equals(workspace)) {
-    // Queue the test job
-    for(int i = 0; i<testsToQueue; i++) {
-        queue("${pipelineLibraryRepoName}/${testJobName}")
-    }
-}
-
-
+queue("${pipelineLibraryRepoName}/${testJobName}")

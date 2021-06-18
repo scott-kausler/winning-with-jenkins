@@ -14,6 +14,21 @@ resource "random_integer" "jenkins_node_port" {
   seed = terraform.workspace
 }
 
+// Set gethub secret as operator credentials to enable github ouath
+resource "kubernetes_secret" "jenkins_operator_credentials" {
+  metadata {
+    name = "jenkins-operator-credentials-jenkins"
+    namespace = kubernetes_namespace.jenkins.id
+  }
+  data = {
+    user = "ACCESSTOKEN"
+    password = var.github_token
+    token = var.github_token
+    // By setting this in the future we tell the operator not to rotate these credentials
+    tokenCreationTime = "2031-02-27T14:56:56.524250355Z"
+  }
+}
+
 resource "kubernetes_secret" "github_credentials" {
   metadata {
     name = "github-credentials"
@@ -148,6 +163,10 @@ resource "kubernetes_manifest" "jenkins" {
                     "name" = "http_request"
                     "version" = "1.9.0"
                 },
+                {
+                    "name" = "github-oauth"
+                    "version" = "0.33"
+                },
             ]
         }
         "seedJobs" = [
@@ -182,6 +201,7 @@ resource "kubernetes_manifest" "jenkins" {
   }
 
   depends_on = [
-    kubernetes_deployment.jenkins_operator
+    kubernetes_deployment.jenkins_operator,
+    kubernetes_secret.jenkins_operator_credentials
   ]
 }
