@@ -37,7 +37,7 @@ resource "kubernetes_config_map" "jenkins_operator_user_configuration" {
           - key: WORKSPACE
             value: ${terraform.workspace}
           - key: JENKINS_BASE_HOST
-            value: 127.0.0.1:${random_integer.jenkins_node_port.result}
+            value: http://127.0.0.1:${random_integer.jenkins_node_port.result}
     authorizationStrategy:
       projectMatrix:
         permissions:
