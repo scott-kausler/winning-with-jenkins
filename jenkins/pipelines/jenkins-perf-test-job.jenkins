@@ -8,10 +8,14 @@ pipeline {
     stage("Run test job") {
         steps {
           script {
+            def runs = [:]
             int numRuns = params.NUM_RUNS as int
             for(int i =0; i<numRuns; i++) {
-              build job: 'jenkins-test-job', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: params.GIT_BRANCH]]
-            }
+              runs[i] = {
+                build job: 'jenkins-test-job', parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: params.GIT_BRANCH]]
+              }
+            }                 
+            parallel runs
           }
         }
     }
