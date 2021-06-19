@@ -2,7 +2,7 @@ pipeline {
   agent none
   parameters {
     string( 'GIT_BRANCH', 'main', 'The branch name you are deploying from')
-    choice(name: 'NUM_RUNS', choices: ['2', '3', '5', '8', '13', '21', '34', '55', '89', '144'], description: 'Number of test runs')
+    choice(name: 'NUM_RUNS', choices: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '144'], description: 'Number of test runs')
   }
   stages {
     stage("Run test job") {
