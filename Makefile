@@ -7,4 +7,4 @@ TF_COMMAND=plan
 all: jenkins
 
 jenkins:
-	. .env && scripts/terraform.sh $@
+	scripts/terraform.sh $@
