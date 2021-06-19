@@ -7,9 +7,11 @@ pipeline {
   stages {
     stage("Run test job") {
         steps {
-          int numRuns = params.NUM_RUNS as int
-          for(int i =0; i<numRuns; i++) {
-            build job: 'jenkins-test-job', parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: params.GIT_BRANCH]]
+          script {
+            int numRuns = params.NUM_RUNS as int
+            for(int i =0; i<numRuns; i++) {
+              build job: 'jenkins-test-job', parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: params.GIT_BRANCH]]
+            }
           }
         }
     }
