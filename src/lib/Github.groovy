@@ -78,8 +78,8 @@ class Github implements Serializable {
         def encodedBranchName=java.net.URLEncoder.encode("$branch", "UTF-8")
         def repoName=getRepoName(script)
 
-        String url = "${script.env.JENKINS_BASE_HOST}job/$repoName/job/$jobName/parambuild?BRANCH_NAME=$encodedBranchName"
-        String statusText = "${script.env.JENKINS_BASE_HOST}job/$repoName/job/$jobName"
+        String url = "${script.env.JENKINS_BASE_HOST}/job/$repoName/job/$jobName/parambuild?BRANCH_NAME=$encodedBranchName"
+        String statusText = "${script.env.JENKINS_BASE_HOST}/job/$repoName/job/$jobName"
 
         addStatusCheck(script, "$jobName-job", statusText, url)
     }
