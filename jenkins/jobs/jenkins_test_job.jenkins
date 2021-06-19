@@ -9,8 +9,3 @@ JobDSLUtilities.createFolder(this, pipelineLibraryRepoName)
 JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, testJobName, "jenkins/pipelines/${testJobName}.jenkins")
 
 queue("${pipelineLibraryRepoName}/${testJobName}")
-
-def perfTestJobName="jenkins-perf-test-job"
-JobDSLUtilities.createPipelineJob(this, githubOrg, pipelineLibraryRepoName, perfTestJobName, "jenkins/pipelines/${perfTestJobName}.jenkins")
-
-queue("${pipelineLibraryRepoName}/${perfTestJobName}")
