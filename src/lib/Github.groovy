@@ -79,7 +79,7 @@ class Github implements Serializable {
         def repoName=getRepoName(script)
 
         String url = "${script.env.JENKINS_BASE_HOST}job/$repoName/job/$jobName/parambuild?BRANCH_NAME=$encodedBranchName"
-        String statusText = "$url"
+        String statusText = "${script.env.JENKINS_BASE_HOST}job/$repoName/job/$jobName"
 
         addStatusCheck(script, "$jobName-job", statusText, url)
     }
