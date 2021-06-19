@@ -171,7 +171,7 @@ resource "kubernetes_manifest" "jenkins" {
         }
         "seedJobs" = [
           {
-            "id" = "jenkins-default"
+            "id" = "all-workspace-jobs"
             "credentialType" = "usernamePassword"
             "credentialID" = "github-credentials"
             "ignoreMissingFiles" = false
@@ -181,7 +181,7 @@ resource "kubernetes_manifest" "jenkins" {
             "repositoryUrl" = "https://github.com/${var.github_org}/${var.pipeline_library_repo_name}.git"
           },
           {
-            "id" = "jenkins-workspace"
+            "id" = "${terraform.workspace}-jobs"
             "credentialType" = "usernamePassword"
             "credentialID" = "github-credentials"
             "ignoreMissingFiles" = true
