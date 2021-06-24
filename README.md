@@ -4,6 +4,7 @@ Demo Repo Used to Demonstrate an Idealized Jenkins Deployment building a branch 
 ## Presentation
 The companion presentation is[here](https://docs.google.com/presentation/d/16tdw1kBzsul6Y0bMVis7S3pFMDsvtAY6OHvGNWcZ3n8/edit?usp=sharing).
 
+
 ## Setup
 **Step 1** Install [docker desktop](https://www.docker.com/products/docker-desktop), [terraform](https://www.terraform.io/downloads.html), and make.
 **Step 2** Enable kubernetes for docker desktop and give it a sensible amount of resources (80% of your system resources should be fine).
