@@ -14,4 +14,3 @@ The companion presentation is[here](https://docs.google.com/presentation/d/16tdw
 **Step 5** Run `make all TF_COMMAND=apply` to create the jenkins instance.
 **Step 6** Browse to the outputed URL and play around.
 **Step 7** USE TF_WORKSPACE=<workspace> to create another jenkins instace. Useful for development.
-
